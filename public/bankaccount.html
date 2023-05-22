@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Bank Account</title>
+    <link rel="stylesheet" href="bank_account_styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+</head>
+
+<body>
+    <!-- Your HTML content -->
+    <div class="account-wrap">
+        <h1>Online Bank Account</h1>
+        <div class="account-details">
+            <div class="group">
+                <label class="label">Account Number</label>
+                <input type="text" class="input" value="1234567890" readonly>
+            </div>
+            <div class="group">
+                <label class="label">Account Holder</label>
+                <input type="text" id = "account-holder" class="input" value="John Doe" readonly>
+            </div>
+            
+            <div class="group">
+                <label class="label">Balance</label>
+                <span id="total-balance">0.00</span>
+            </div>
+            <div class="group">
+                <label class="label">Deposit</label>
+                <input type="text" id="deposit" class="input">
+                <button type="submit" id="depositbutt">Deposit</button>
+            </div>
+            <div class="group">
+                <label class="label">Withdraw</label>
+                <input type="text" id="withdraw" class="input">
+                <button type="submit" id="withdrawbutt">Withdraw</button>
+            </div>
+
+            <div>
+                <a href="homepage.html">
+                <button type = "submit" id = "pagebuttom">Home</button>
+            </a>
+            </div>
+
+            <div>
+                <a href="index.html">
+                <button type = "submit" id = "pagebuttom">Logout</button>
+            </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Get the email address from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = decodeURIComponent(urlParams.get('email'));
+
+        // Set the email address as the value for the "Account Holder" input field
+        const accountHolderField = document.querySelector('input[value="John Doe"]');
+        if (accountHolderField) {
+          accountHolderField.value = email;
+        } else {
+          console.error("Account holder field not found!");
+        }
+    </script>
+
+
+    <script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyCb-GgXSOr-RyD8oW0MtaP5VrqZ31r9n70",
+        authDomain: "project-sem-d465b.firebaseapp.com",
+        databaseURL: "https://project-sem-d465b-default-rtdb.firebaseio.com",
+        projectId: "project-sem-d465b",
+        storageBucket: "project-sem-d465b.appspot.com",
+        messagingSenderId: "720547686880",
+        appId: "1:720547686880:web:b5325274c2de125ca7e385"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+
+    // Fetch initial account balance from Firestore
+    var accountBalance = 0;
+    var accountRef = db.collection('accounts').doc('1234567890');
+    accountRef.get().then((doc) => {
+        if (doc.exists) {
+            accountBalance = doc.data().balance;
+            document.getElementById('total-balance').innerText = accountBalance;
+        }
+    });
+
+    document.getElementById('depositbutt').addEventListener('click', function() {
+        var depositAmount = parseFloat(document.getElementById('deposit').value);
+
+        accountBalance += depositAmount;
+        document.getElementById('total-balance').innerText = accountBalance;
+
+        // update balance in Firestore
+        accountRef.update({ balance: accountBalance });
+
+        // log transaction in Firestore
+        db.collection('transactions').add({
+            accountHolder: 'account-holder',
+            action: 'deposit',
+            amount: depositAmount,
+            date: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function(docRef) {
+            console.log('Document written with ID: ', docRef.id);
+        })
+        .catch(function(error) {
+            console.error('Error adding document: ', error);
+        });
+    });
+
+    document.getElementById('withdrawbutt').addEventListener('click', function() {
+        var withdrawAmount = parseFloat(document.getElementById('withdraw').value);
+
+        if (withdrawAmount > accountBalance) {
+            alert("You don't have enough funds!");
+            return;
+        }
+
+        accountBalance -= withdrawAmount;
+        document.getElementById('total-balance').innerText = accountBalance;
+
+        // update balance in Firestore
+        accountRef.update({ balance: accountBalance });
+
+        // log transaction in Firestore
+        db.collection('transactions').add({
+            accountHolder: 'account-holder',
+            action: 'withdraw',
+            amount: withdrawAmount,
+            date: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function(docRef) {
+            console.log('Document written with ID: ', docRef.id);
+        })
+        .catch(function(error) {
+            console.error('Error adding document: ', error);
+        });
+    });
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  font: 600 16px/18px 'Open Sans', sans-serif;
+  background: #FDB913;
+  color: #000000;
+  transition: all 0.25s linear;
+}
+
+.account-wrap {
+  width: 100%;
+  margin: auto;
+  max-width: 525px;
+  min-height: 670px;
+  padding: 50px 70px;
+  background: #000000;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.1), 0 17px 50px 0 rgba(0, 0, 0, 0.395);
+  border-radius: 20px;
+  transition: all 0.25s ease-in-out;
+}
+
+.account-wrap:hover {
+  transform: scale(1.01);
+  box-shadow: 0 12px 25px 0 rgba(0, 0, 0, 0.2), 0 17px 60px 0 rgba(0, 0, 0, 0.495);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #FDB913;
+  font-size: 2em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.account-details {
+  width: 100%;
+}
+
+.group {
+  margin-bottom: 30px;
+}
+
+.label,
+.input {
+  width: 100%;
+  color: #FDB913;
+  display: block;
+}
+
+.input {
+  border: none;
+  padding: 15px 20px;
+  border-radius: 25px;
+  background: rgba(253, 185, 19, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.input:hover {
+  background: rgba(253, 185, 19, 0.2);
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 10px 2px rgba(253, 185, 19, 0.2);
+}
+
+button {
+  background-color: #FDB913;
+  color: #000000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #c99711;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 10px 2px rgba(253, 185, 19, 0.2);
+}
